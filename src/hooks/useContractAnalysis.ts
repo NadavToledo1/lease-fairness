@@ -34,7 +34,7 @@ export function useContractAnalysis() {
       const redFlags: AnalysisResult["redFlags"] = [];
       const strengths: string[] = [];
       const legalNotes: string[] = [];
-      let score = 5;
+      let score = 6;
 
       // Check for repair clauses
       if (text.includes("תיקון") && (text.includes("שוכר") || text.includes("דייר")) && (text.includes("צנרת") || text.includes("חשמל") || text.includes("מבנה"))) {
