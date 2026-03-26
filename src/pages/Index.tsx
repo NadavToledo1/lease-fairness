@@ -78,27 +78,48 @@ const Index = () => {
               className="space-y-5"
             >
               {/* Input Area */}
-              <div className="bg-card rounded-xl border shadow-card p-6 space-y-4">
-                <Tabs defaultValue="paste" dir="rtl">
-                  <TabsList className="w-full">
-                    <TabsTrigger value="paste" className="flex-1 gap-2">
-                      <FileText className="w-4 h-4" />
-                      הדבקת טקסט
-                    </TabsTrigger>
-                    <TabsTrigger value="upload" className="flex-1 gap-2">
-                      <Upload className="w-4 h-4" />
-                      העלאת קובץ
-                    </TabsTrigger>
-                  </TabsList>
+              {/* Mode Selector */}
+              <div className="flex gap-3 justify-center">
+                <Button
+                  variant={analysisMode === "full" ? "default" : "outline"}
+                  onClick={() => setAnalysisMode("full")}
+                  className={`gap-2 rounded-lg px-6 py-3 ${analysisMode === "full" ? "bg-accent text-accent-foreground" : ""}`}
+                >
+                  <BookOpen className="w-4 h-4" />
+                  בדיקת חוזה מלא
+                </Button>
+                <Button
+                  variant={analysisMode === "clause" ? "default" : "outline"}
+                  onClick={() => setAnalysisMode("clause")}
+                  className={`gap-2 rounded-lg px-6 py-3 ${analysisMode === "clause" ? "bg-accent text-accent-foreground" : ""}`}
+                >
+                  <Search className="w-4 h-4" />
+                  בדיקת סעיף ספציפי
+                </Button>
+              </div>
 
-                  <TabsContent value="paste" className="space-y-4 mt-4">
-                    <textarea
-                      value={contractText}
-                      onChange={(e) => setContractText(e.target.value)}
-                      placeholder="הדביקו כאן את טקסט חוזה השכירות..."
-                      className="w-full h-64 bg-muted rounded-lg border-none p-4 text-sm text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-accent/50 font-body"
-                      dir="rtl"
-                    />
+              <div className="bg-card rounded-xl border shadow-card p-6 space-y-4">
+                {analysisMode === "full" ? (
+                  <Tabs defaultValue="paste" dir="rtl">
+                    <TabsList className="w-full">
+                      <TabsTrigger value="paste" className="flex-1 gap-2">
+                        <FileText className="w-4 h-4" />
+                        הדבקת טקסט
+                      </TabsTrigger>
+                      <TabsTrigger value="upload" className="flex-1 gap-2">
+                        <Upload className="w-4 h-4" />
+                        העלאת קובץ
+                      </TabsTrigger>
+                    </TabsList>
+
+                    <TabsContent value="paste" className="space-y-4 mt-4">
+                      <textarea
+                        value={contractText}
+                        onChange={(e) => setContractText(e.target.value)}
+                        placeholder="הדביקו כאן את טקסט חוזה השכירות המלא..."
+                        className="w-full h-64 bg-muted rounded-lg border-none p-4 text-sm text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-accent/50 font-body"
+                        dir="rtl"
+                      />
                   </TabsContent>
 
                   <TabsContent value="upload" className="mt-4">
