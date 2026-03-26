@@ -74,7 +74,7 @@ export function useContractAnalysis() {
           problem: "סכום מופרז שאינו פרופורציונלי לנזק האמיתי. בית משפט עשוי להפחית פיצוי מוסכם לא סביר.",
           amendment: 'יש להפחית ל: "פיצוי מוסכם של 150-200 ש״ח ליום, בהתאם לגובה דמי השכירות החודשיים"',
         });
-        score -= 1;
+        score -= 0.75;
       }
 
       // Check for excessive guarantees
