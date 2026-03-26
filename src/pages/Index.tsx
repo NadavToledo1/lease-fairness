@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FileText, Loader2, Scale, AlertCircle, ArrowLeft } from "lucide-react";
+import { FileText, Loader2, Scale, AlertCircle, ArrowLeft, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import ScoreGauge from "@/components/ScoreGauge";
 import RedFlagTable from "@/components/RedFlagTable";
 import StrengthsList from "@/components/StrengthsList";
@@ -9,7 +10,34 @@ import { useContractAnalysis } from "@/hooks/useContractAnalysis";
 
 const Index = () => {
   const [contractText, setContractText] = useState("");
+  const [fileName, setFileName] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { result, isAnalyzing, error, analyze } = useContractAnalysis();
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setFileName(file.name);
+
+    if (file.type === "text/plain" || file.name.endsWith(".txt")) {
+      const text = await file.text();
+      setContractText(text);
+    } else {
+      // For non-text files, read as text (best effort)
+      const text = await file.text();
+      setContractText(text);
+    }
+  };
+
+  const handleDrop = async (e: React.DragEvent) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files?.[0];
+    if (!file) return;
+    setFileName(file.name);
+    const text = await file.text();
+    setContractText(text);
+  };
 
   return (
     <div className="min-h-screen bg-background" dir="rtl">
@@ -50,17 +78,58 @@ const Index = () => {
             >
               {/* Input Area */}
               <div className="bg-card rounded-xl border shadow-card p-6 space-y-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <FileText className="w-5 h-5 text-accent" />
-                  <h2 className="text-lg font-display font-semibold text-card-foreground">טקסט החוזה</h2>
-                </div>
-                <textarea
-                  value={contractText}
-                  onChange={(e) => setContractText(e.target.value)}
-                  placeholder="הדביקו כאן את טקסט חוזה השכירות..."
-                  className="w-full h-64 bg-muted rounded-lg border-none p-4 text-sm text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-accent/50 font-body"
-                  dir="rtl"
-                />
+                <Tabs defaultValue="paste" dir="rtl">
+                  <TabsList className="w-full">
+                    <TabsTrigger value="paste" className="flex-1 gap-2">
+                      <FileText className="w-4 h-4" />
+                      הדבקת טקסט
+                    </TabsTrigger>
+                    <TabsTrigger value="upload" className="flex-1 gap-2">
+                      <Upload className="w-4 h-4" />
+                      העלאת קובץ
+                    </TabsTrigger>
+                  </TabsList>
+
+                  <TabsContent value="paste" className="space-y-4 mt-4">
+                    <textarea
+                      value={contractText}
+                      onChange={(e) => setContractText(e.target.value)}
+                      placeholder="הדביקו כאן את טקסט חוזה השכירות..."
+                      className="w-full h-64 bg-muted rounded-lg border-none p-4 text-sm text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-accent/50 font-body"
+                      dir="rtl"
+                    />
+                  </TabsContent>
+
+                  <TabsContent value="upload" className="mt-4">
+                    <div
+                      onDragOver={(e) => e.preventDefault()}
+                      onDrop={handleDrop}
+                      onClick={() => fileInputRef.current?.click()}
+                      className="w-full h-64 bg-muted rounded-lg border-2 border-dashed border-border hover:border-accent/50 transition-colors cursor-pointer flex flex-col items-center justify-center gap-4"
+                    >
+                      <Upload className="w-10 h-10 text-muted-foreground" />
+                      {fileName ? (
+                        <div className="text-center space-y-1">
+                          <p className="text-sm font-medium text-foreground">{fileName}</p>
+                          <p className="text-xs text-muted-foreground">לחצו להחלפת קובץ</p>
+                        </div>
+                      ) : (
+                        <div className="text-center space-y-1">
+                          <p className="text-sm font-medium text-foreground">גררו קובץ לכאן או לחצו לבחירה</p>
+                          <p className="text-xs text-muted-foreground">תומך בקבצי טקסט (.txt)</p>
+                        </div>
+                      )}
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept=".txt,.text"
+                        onChange={handleFileUpload}
+                        className="hidden"
+                      />
+                    </div>
+                  </TabsContent>
+                </Tabs>
+
                 {error && (
                   <div className="flex items-center gap-2 text-destructive text-sm">
                     <AlertCircle className="w-4 h-4" />
