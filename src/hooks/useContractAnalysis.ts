@@ -117,9 +117,10 @@ export function useContractAnalysis() {
       score = Math.max(1, Math.min(10, Math.round(score)));
 
       let summaryHeadline: string;
-      if (score <= 3) summaryHeadline = "חוזה דרקוני לטובת המשכיר – דורש תיקונים משמעותיים";
-      else if (score <= 5) summaryHeadline = "חוזה סטנדרטי עם הטיה לטובת המשכיר";
-      else if (score <= 7) summaryHeadline = "חוזה מאוזן – תנאים הוגנים ברובם";
+      if (score <= 2) summaryHeadline = "חוזה דרקוני לטובת המשכיר – דורש תיקונים משמעותיים";
+      else if (score <= 4) summaryHeadline = "חוזה הוגן בסך הכל, עם כמה סעיפים שכדאי לתקן";
+      else if (score <= 6) summaryHeadline = "חוזה סטנדרטי ומאוזן – עם נקודות קטנות לשיפור";
+      else if (score <= 8) summaryHeadline = "חוזה מאוזן – תנאים הוגנים ברובם";
       else summaryHeadline = "חוזה טוב מאוד לטובת השוכר";
 
       let bottomLine: string;
