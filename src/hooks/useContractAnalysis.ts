@@ -64,7 +64,7 @@ export function useContractAnalysis() {
           problem: "כניסה ללא תיאום מראש מפרה את פרטיות השוכר. חוק השכירות דורש הודעה סבירה מראש.",
           amendment: 'יש לנסח: "ביקור בדירה יתואם מראש, בהתראה של 48 שעות לפחות, בשעות סבירות ובהסכמת השוכר"',
         });
-        score -= 1;
+        score -= 0.75;
       }
 
       // Check for excessive penalties
