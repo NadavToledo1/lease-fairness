@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FileText, Loader2, Scale, AlertCircle, ArrowLeft, Upload, Search, BookOpen } from "lucide-react";
+import { FileText, Loader2, Scale, AlertCircle, ArrowLeft, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import ScoreGauge from "@/components/ScoreGauge";
@@ -11,7 +11,6 @@ import { useContractAnalysis } from "@/hooks/useContractAnalysis";
 const Index = () => {
   const [contractText, setContractText] = useState("");
   const [fileName, setFileName] = useState<string | null>(null);
-  const [analysisMode, setAnalysisMode] = useState<"full" | "clause">("full");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { result, isAnalyzing, error, analyze } = useContractAnalysis();
 
@@ -78,91 +77,58 @@ const Index = () => {
               className="space-y-5"
             >
               {/* Input Area */}
-              {/* Mode Selector */}
-              <div className="flex gap-3 justify-center">
-                <Button
-                  variant={analysisMode === "full" ? "default" : "outline"}
-                  onClick={() => setAnalysisMode("full")}
-                  className={`gap-2 rounded-lg px-6 py-3 ${analysisMode === "full" ? "bg-accent text-accent-foreground" : ""}`}
-                >
-                  <BookOpen className="w-4 h-4" />
-                  בדיקת חוזה מלא
-                </Button>
-                <Button
-                  variant={analysisMode === "clause" ? "default" : "outline"}
-                  onClick={() => setAnalysisMode("clause")}
-                  className={`gap-2 rounded-lg px-6 py-3 ${analysisMode === "clause" ? "bg-accent text-accent-foreground" : ""}`}
-                >
-                  <Search className="w-4 h-4" />
-                  בדיקת סעיף ספציפי
-                </Button>
-              </div>
-
               <div className="bg-card rounded-xl border shadow-card p-6 space-y-4">
-                {analysisMode === "full" ? (
-                  <Tabs defaultValue="paste" dir="rtl">
-                    <TabsList className="w-full">
-                      <TabsTrigger value="paste" className="flex-1 gap-2">
-                        <FileText className="w-4 h-4" />
-                        הדבקת טקסט
-                      </TabsTrigger>
-                      <TabsTrigger value="upload" className="flex-1 gap-2">
-                        <Upload className="w-4 h-4" />
-                        העלאת קובץ
-                      </TabsTrigger>
-                    </TabsList>
+                <Tabs defaultValue="paste" dir="rtl">
+                  <TabsList className="w-full">
+                    <TabsTrigger value="paste" className="flex-1 gap-2">
+                      <FileText className="w-4 h-4" />
+                      הדבקת טקסט
+                    </TabsTrigger>
+                    <TabsTrigger value="upload" className="flex-1 gap-2">
+                      <Upload className="w-4 h-4" />
+                      העלאת קובץ
+                    </TabsTrigger>
+                  </TabsList>
 
-                    <TabsContent value="paste" className="space-y-4 mt-4">
-                      <textarea
-                        value={contractText}
-                        onChange={(e) => setContractText(e.target.value)}
-                        placeholder="הדביקו כאן את טקסט חוזה השכירות המלא..."
-                        className="w-full h-64 bg-muted rounded-lg border-none p-4 text-sm text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-accent/50 font-body"
-                        dir="rtl"
-                      />
-                    </TabsContent>
-
-                    <TabsContent value="upload" className="mt-4">
-                      <div
-                        onDragOver={(e) => e.preventDefault()}
-                        onDrop={handleDrop}
-                        onClick={() => fileInputRef.current?.click()}
-                        className="w-full h-64 bg-muted rounded-lg border-2 border-dashed border-border hover:border-accent/50 transition-colors cursor-pointer flex flex-col items-center justify-center gap-4"
-                      >
-                        <Upload className="w-10 h-10 text-muted-foreground" />
-                        {fileName ? (
-                          <div className="text-center space-y-1">
-                            <p className="text-sm font-medium text-foreground">{fileName}</p>
-                            <p className="text-xs text-muted-foreground">לחצו להחלפת קובץ</p>
-                          </div>
-                        ) : (
-                          <div className="text-center space-y-1">
-                            <p className="text-sm font-medium text-foreground">גררו קובץ לכאן או לחצו לבחירה</p>
-                            <p className="text-xs text-muted-foreground">תומך בקבצי טקסט (.txt)</p>
-                          </div>
-                        )}
-                        <input
-                          ref={fileInputRef}
-                          type="file"
-                          accept=".txt,.text"
-                          onChange={handleFileUpload}
-                          className="hidden"
-                        />
-                      </div>
-                    </TabsContent>
-                  </Tabs>
-                ) : (
-                  <div className="space-y-2">
-                    <p className="text-sm text-muted-foreground">הדביקו את הסעיף הספציפי שתרצו לבדוק:</p>
+                  <TabsContent value="paste" className="space-y-4 mt-4">
                     <textarea
                       value={contractText}
                       onChange={(e) => setContractText(e.target.value)}
-                      placeholder="הדביקו כאן סעיף ספציפי מחוזה השכירות..."
-                      className="w-full h-40 bg-muted rounded-lg border-none p-4 text-sm text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-accent/50 font-body"
+                      placeholder="הדביקו כאן את טקסט חוזה השכירות..."
+                      className="w-full h-64 bg-muted rounded-lg border-none p-4 text-sm text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-accent/50 font-body"
                       dir="rtl"
                     />
-                  </div>
-                )}
+                  </TabsContent>
+
+                  <TabsContent value="upload" className="mt-4">
+                    <div
+                      onDragOver={(e) => e.preventDefault()}
+                      onDrop={handleDrop}
+                      onClick={() => fileInputRef.current?.click()}
+                      className="w-full h-64 bg-muted rounded-lg border-2 border-dashed border-border hover:border-accent/50 transition-colors cursor-pointer flex flex-col items-center justify-center gap-4"
+                    >
+                      <Upload className="w-10 h-10 text-muted-foreground" />
+                      {fileName ? (
+                        <div className="text-center space-y-1">
+                          <p className="text-sm font-medium text-foreground">{fileName}</p>
+                          <p className="text-xs text-muted-foreground">לחצו להחלפת קובץ</p>
+                        </div>
+                      ) : (
+                        <div className="text-center space-y-1">
+                          <p className="text-sm font-medium text-foreground">גררו קובץ לכאן או לחצו לבחירה</p>
+                          <p className="text-xs text-muted-foreground">תומך בקבצי טקסט (.txt)</p>
+                        </div>
+                      )}
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept=".txt,.text"
+                        onChange={handleFileUpload}
+                        className="hidden"
+                      />
+                    </div>
+                  </TabsContent>
+                </Tabs>
 
                 {error && (
                   <div className="flex items-center gap-2 text-destructive text-sm">
@@ -171,17 +137,17 @@ const Index = () => {
                   </div>
                 )}
                 <Button
-                  onClick={() => analyze(contractText, analysisMode)}
+                  onClick={() => analyze(contractText)}
                   disabled={isAnalyzing}
                   className="w-full bg-accent text-accent-foreground hover:bg-accent/90 font-semibold text-base py-6 rounded-lg"
                 >
                   {isAnalyzing ? (
                     <span className="flex items-center gap-2">
                       <Loader2 className="w-5 h-5 animate-spin" />
-                      {analysisMode === "full" ? "מנתח את החוזה..." : "בודק את הסעיף..."}
+                      מנתח את החוזה...
                     </span>
                   ) : (
-                    analysisMode === "full" ? "נתח את החוזה" : "בדוק את הסעיף"
+                    "נתח את החוזה"
                   )}
                 </Button>
               </div>
