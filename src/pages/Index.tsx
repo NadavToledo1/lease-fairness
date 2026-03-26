@@ -120,37 +120,49 @@ const Index = () => {
                         className="w-full h-64 bg-muted rounded-lg border-none p-4 text-sm text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-accent/50 font-body"
                         dir="rtl"
                       />
-                  </TabsContent>
+                    </TabsContent>
 
-                  <TabsContent value="upload" className="mt-4">
-                    <div
-                      onDragOver={(e) => e.preventDefault()}
-                      onDrop={handleDrop}
-                      onClick={() => fileInputRef.current?.click()}
-                      className="w-full h-64 bg-muted rounded-lg border-2 border-dashed border-border hover:border-accent/50 transition-colors cursor-pointer flex flex-col items-center justify-center gap-4"
-                    >
-                      <Upload className="w-10 h-10 text-muted-foreground" />
-                      {fileName ? (
-                        <div className="text-center space-y-1">
-                          <p className="text-sm font-medium text-foreground">{fileName}</p>
-                          <p className="text-xs text-muted-foreground">לחצו להחלפת קובץ</p>
-                        </div>
-                      ) : (
-                        <div className="text-center space-y-1">
-                          <p className="text-sm font-medium text-foreground">גררו קובץ לכאן או לחצו לבחירה</p>
-                          <p className="text-xs text-muted-foreground">תומך בקבצי טקסט (.txt)</p>
-                        </div>
-                      )}
-                      <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept=".txt,.text"
-                        onChange={handleFileUpload}
-                        className="hidden"
-                      />
-                    </div>
-                  </TabsContent>
-                </Tabs>
+                    <TabsContent value="upload" className="mt-4">
+                      <div
+                        onDragOver={(e) => e.preventDefault()}
+                        onDrop={handleDrop}
+                        onClick={() => fileInputRef.current?.click()}
+                        className="w-full h-64 bg-muted rounded-lg border-2 border-dashed border-border hover:border-accent/50 transition-colors cursor-pointer flex flex-col items-center justify-center gap-4"
+                      >
+                        <Upload className="w-10 h-10 text-muted-foreground" />
+                        {fileName ? (
+                          <div className="text-center space-y-1">
+                            <p className="text-sm font-medium text-foreground">{fileName}</p>
+                            <p className="text-xs text-muted-foreground">לחצו להחלפת קובץ</p>
+                          </div>
+                        ) : (
+                          <div className="text-center space-y-1">
+                            <p className="text-sm font-medium text-foreground">גררו קובץ לכאן או לחצו לבחירה</p>
+                            <p className="text-xs text-muted-foreground">תומך בקבצי טקסט (.txt)</p>
+                          </div>
+                        )}
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept=".txt,.text"
+                          onChange={handleFileUpload}
+                          className="hidden"
+                        />
+                      </div>
+                    </TabsContent>
+                  </Tabs>
+                ) : (
+                  <div className="space-y-2">
+                    <p className="text-sm text-muted-foreground">הדביקו את הסעיף הספציפי שתרצו לבדוק:</p>
+                    <textarea
+                      value={contractText}
+                      onChange={(e) => setContractText(e.target.value)}
+                      placeholder="הדביקו כאן סעיף ספציפי מחוזה השכירות..."
+                      className="w-full h-40 bg-muted rounded-lg border-none p-4 text-sm text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-accent/50 font-body"
+                      dir="rtl"
+                    />
+                  </div>
+                )}
 
                 {error && (
                   <div className="flex items-center gap-2 text-destructive text-sm">
@@ -159,17 +171,17 @@ const Index = () => {
                   </div>
                 )}
                 <Button
-                  onClick={() => analyze(contractText)}
+                  onClick={() => analyze(contractText, analysisMode)}
                   disabled={isAnalyzing}
                   className="w-full bg-accent text-accent-foreground hover:bg-accent/90 font-semibold text-base py-6 rounded-lg"
                 >
                   {isAnalyzing ? (
                     <span className="flex items-center gap-2">
                       <Loader2 className="w-5 h-5 animate-spin" />
-                      מנתח את החוזה...
+                      {analysisMode === "full" ? "מנתח את החוזה..." : "בודק את הסעיף..."}
                     </span>
                   ) : (
-                    "נתח את החוזה"
+                    analysisMode === "full" ? "נתח את החוזה" : "בדוק את הסעיף"
                   )}
                 </Button>
               </div>
