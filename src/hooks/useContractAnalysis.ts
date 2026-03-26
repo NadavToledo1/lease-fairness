@@ -127,9 +127,9 @@ export function useContractAnalysis() {
       if (redFlags.length === 0) {
         bottomLine = "ניתן לחתום – החוזה נראה הוגן ומאוזן.";
       } else if (redFlags.length <= 2) {
-        bottomLine = `מומלץ לחתום לאחר תיקון ${redFlags.length} הסעיפים הבעייתיים שזוהו.`;
+        bottomLine = `החוזה הוגן בסך הכל. כדאי לנסות לתקן ${redFlags.length} סעיפים לפני חתימה, אך אין מדובר בבעיות חמורות.`;
       } else {
-        bottomLine = "מומלץ מאוד לתקן את הסעיפים הבעייתיים לפני חתימה, או להיוועץ בעורך דין.";
+        bottomLine = "החוזה סביר ברובו, אך מומלץ לתקן את הסעיפים הבעייתיים לפני חתימה או להתייעץ עם עורך דין.";
       }
 
       setResult({
