@@ -1,4 +1,4 @@
-# 🏠 RentCheck AI
+# 🏠 RentCheck AI - https://lease-fairness.lovable.app/
 ### **Is your rental contract fair or "Draconian"?**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
