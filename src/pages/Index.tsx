@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FileText, Loader2, Scale, AlertCircle, ArrowLeft, Upload } from "lucide-react";
+import { FileText, Loader2, Scale, AlertCircle, ArrowLeft, Upload, Search, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import ScoreGauge from "@/components/ScoreGauge";
@@ -11,6 +11,7 @@ import { useContractAnalysis } from "@/hooks/useContractAnalysis";
 const Index = () => {
   const [contractText, setContractText] = useState("");
   const [fileName, setFileName] = useState<string | null>(null);
+  const [analysisMode, setAnalysisMode] = useState<"full" | "clause">("full");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { result, isAnalyzing, error, analyze } = useContractAnalysis();
 

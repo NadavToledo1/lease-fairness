@@ -18,9 +18,9 @@ export function useContractAnalysis() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const analyze = useCallback((contractText: string) => {
+  const analyze = useCallback((contractText: string, mode: "full" | "clause" = "full") => {
     if (!contractText.trim()) {
-      setError("אנא הזן את טקסט החוזה לניתוח");
+      setError(mode === "full" ? "אנא הזן את טקסט החוזה לניתוח" : "אנא הזן את הסעיף לבדיקה");
       return;
     }
 
