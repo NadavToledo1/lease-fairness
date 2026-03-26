@@ -34,7 +34,7 @@ export function useContractAnalysis() {
       const redFlags: AnalysisResult["redFlags"] = [];
       const strengths: string[] = [];
       const legalNotes: string[] = [];
-      let score = 5;
+      let score = 6;
 
       // Check for repair clauses
       if (text.includes("תיקון") && (text.includes("שוכר") || text.includes("דייר")) && (text.includes("צנרת") || text.includes("חשמל") || text.includes("מבנה"))) {
@@ -43,7 +43,7 @@ export function useContractAnalysis() {
           problem: "לפי חוק השכירות ההוגנת, תיקוני בלאי סביר ותשתיות הם באחריות המשכיר. הטלת עלויות אלו על השוכר היא בלתי חוקית.",
           amendment: 'יש להוסיף: "תיקוני מבנה, צנרת וחשמל שנובעים מבלאי סביר יהיו באחריות המשכיר"',
         });
-        score -= 1.5;
+        score -= 1;
         legalNotes.push("סעיף התיקונים עלול לסתור את חוק שכירות הוגנת 2017 בנוגע לאחריות המשכיר לתחזוקת מערכות.");
       }
 
@@ -54,7 +54,7 @@ export function useContractAnalysis() {
           problem: "סעיף חד-צדדי המאפשר למשכיר לפנות ללא סיבה בהתראה קצרה, ללא זכות מקבילה לשוכר. מפר את עקרון האיזון החוזי.",
           amendment: 'יש לקבוע: "כל צד רשאי לבטל את החוזה בהתראה של 90 יום מראש, בכתב ובנימוק"',
         });
-        score -= 1.5;
+        score -= 1;
       }
 
       // Check for property visit
@@ -64,7 +64,7 @@ export function useContractAnalysis() {
           problem: "כניסה ללא תיאום מראש מפרה את פרטיות השוכר. חוק השכירות דורש הודעה סבירה מראש.",
           amendment: 'יש לנסח: "ביקור בדירה יתואם מראש, בהתראה של 48 שעות לפחות, בשעות סבירות ובהסכמת השוכר"',
         });
-        score -= 1;
+        score -= 0.75;
       }
 
       // Check for excessive penalties
@@ -74,7 +74,7 @@ export function useContractAnalysis() {
           problem: "סכום מופרז שאינו פרופורציונלי לנזק האמיתי. בית משפט עשוי להפחית פיצוי מוסכם לא סביר.",
           amendment: 'יש להפחית ל: "פיצוי מוסכם של 150-200 ש״ח ליום, בהתאם לגובה דמי השכירות החודשיים"',
         });
-        score -= 1;
+        score -= 0.75;
       }
 
       // Check for excessive guarantees
@@ -84,7 +84,7 @@ export function useContractAnalysis() {
           problem: "דרישת ערבויות מופרזת. המקובל בשוק הוא 2-3 חודשי שכירות כערבות.",
           amendment: 'יש לצמצם ל: "ערבות בגובה חודשיים שכירות, שתוחזר תוך 30 יום מסיום השכירות"',
         });
-        score -= 1;
+        score -= 0.75;
       }
 
       // Good signs
@@ -117,18 +117,19 @@ export function useContractAnalysis() {
       score = Math.max(1, Math.min(10, Math.round(score)));
 
       let summaryHeadline: string;
-      if (score <= 3) summaryHeadline = "חוזה דרקוני לטובת המשכיר – דורש תיקונים משמעותיים";
-      else if (score <= 5) summaryHeadline = "חוזה סטנדרטי עם הטיה לטובת המשכיר";
-      else if (score <= 7) summaryHeadline = "חוזה מאוזן – תנאים הוגנים ברובם";
+      if (score <= 2) summaryHeadline = "חוזה דרקוני לטובת המשכיר – דורש תיקונים משמעותיים";
+      else if (score <= 4) summaryHeadline = "חוזה הוגן בסך הכל, עם כמה סעיפים שכדאי לתקן";
+      else if (score <= 6) summaryHeadline = "חוזה סטנדרטי ומאוזן – עם נקודות קטנות לשיפור";
+      else if (score <= 8) summaryHeadline = "חוזה מאוזן – תנאים הוגנים ברובם";
       else summaryHeadline = "חוזה טוב מאוד לטובת השוכר";
 
       let bottomLine: string;
       if (redFlags.length === 0) {
         bottomLine = "ניתן לחתום – החוזה נראה הוגן ומאוזן.";
       } else if (redFlags.length <= 2) {
-        bottomLine = `מומלץ לחתום לאחר תיקון ${redFlags.length} הסעיפים הבעייתיים שזוהו.`;
+        bottomLine = `החוזה הוגן בסך הכל. כדאי לנסות לתקן ${redFlags.length} סעיפים לפני חתימה, אך אין מדובר בבעיות חמורות.`;
       } else {
-        bottomLine = "מומלץ מאוד לתקן את הסעיפים הבעייתיים לפני חתימה, או להיוועץ בעורך דין.";
+        bottomLine = "החוזה סביר ברובו, אך מומלץ לתקן את הסעיפים הבעייתיים לפני חתימה או להתייעץ עם עורך דין.";
       }
 
       setResult({
